@@ -1,43 +1,121 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>API Test Tool</title>
-</head>
-<body style="font-family: sans-serif; padding: 20px;">
-  <h2>📡 API Test Tool</h2>
-  
-  <label>📱 Phone Number:</label><br>
-  <input type="text" id="phone" value="03001677853" placeholder="Enter phone"><br><br>
-
-  <button onclick="sendJazz()">Send to JazzTV API</button>
-  <button onclick="sendSasta()">Send to Sastaticket API</button>
-  
-  <h3>Response:</h3>
-  <pre id="response" style="background:#f1f1f1; padding: 10px;"></pre>
-
-  <script>
-    function sendJazz() {
-      const phone = document.getElementById('phone').value;
-      fetch("https://jazztv.pk/alpha/api_gateway/index.php/v3/users-dbss/sign-up-wc", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ msisdn: phone })
-      })
-      .then(res => res.json())
-      .then(data => document.getElementById("response").innerText = JSON.stringify(data, null, 2))
-      .catch(err => document.getElementById("response").innerText = "Error: " + err);
+  <title>API Terminal</title>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #33ff33;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 30px;
     }
 
-    function sendSasta() {
+    h2 {
+      color: #00ff99;
+      text-shadow: 0 0 10px #00ff99;
+    }
+
+    label {
+      font-weight: bold;
+      color: #00ffcc;
+      display: block;
+      margin-top: 20px;
+    }
+
+    input, select, textarea, button {
+      background: #111;
+      color: #00ff99;
+      border: 1px solid #00ff99;
+      border-radius: 5px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 15px;
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #1a1a1a;
+      box-shadow: 0 0 5px #00ff99;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #222;
+      box-shadow: 0 0 10px #00ff99;
+    }
+
+    textarea {
+      height: 250px;
+      margin-top: 10px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #080808;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 0 20px #00ff99;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🧪 Terminal API Tester</h2>
+
+    <label>🔗 API URL</label>
+    <input type="text" id="apiUrl" value="https://jazztv.pk/alpha/api_gateway/index.php/v3/users-dbss/sign-up-wc" />
+
+    <label>📱 Number / Payload</label>
+    <input type="text" id="phone" value="03001234567" />
+
+    <label>⚙️ Method</label>
+    <select id="method">
+      <option value="POST">POST</option>
+      <option value="GET">GET</option>
+    </select>
+
+    <button onclick="sendRequest()">🚀 Send</button>
+
+    <label>📥 Response</label>
+    <textarea id="response" readonly></textarea>
+
+    <label>✅ Status Code</label>
+    <input type="text" id="statusCode" readonly />
+  </div>
+
+  <script>
+    async function sendRequest() {
+      const url = document.getElementById('apiUrl').value;
       const phone = document.getElementById('phone').value;
-      fetch("https://backend.sastaticket.pk/api/v3/users/generate_otp/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: phone })
-      })
-      .then(res => res.json())
-      .then(data => document.getElementById("response").innerText = JSON.stringify(data, null, 2))
-      .catch(err => document.getElementById("response").innerText = "Error: " + err);
+      const method = document.getElementById('method').value;
+      const statusBox = document.getElementById('statusCode');
+      const responseBox = document.getElementById('response');
+
+      let bodyData = JSON.stringify({
+        phone: phone,
+        msisdn: phone
+      });
+
+      try {
+        const res = await fetch(url, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: method === "POST" ? bodyData : undefined
+        });
+
+        const json = await res.json();
+        statusBox.value = res.status;
+        responseBox.value = JSON.stringify(json, null, 2);
+      } catch (err) {
+        statusBox.value = "Error";
+        responseBox.value = err.toString();
+      }
     }
   </script>
 </body>

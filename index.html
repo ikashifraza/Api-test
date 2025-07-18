@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>JazzTV OTP Sender</title>
+  <title>SastaTicket OTP Sender</title>
 </head>
-<body style="font-family:sans-serif; background:#f2f2f2; padding:30px;">
+<body style="font-family:sans-serif; background:#eef; padding:30px;">
 
-  <h2>📲 JazzTV OTP API Test</h2>
-  <label>Enter Phone Number (e.g. 03003310470):</label><br>
+  <h2>📨 SastaTicket OTP Test</h2>
+  <label>Enter Phone Number (e.g. 03001234567):</label><br>
   <input type="text" id="phone" placeholder="03001234567" style="padding:8px; width:250px;"><br><br>
   
   <button onclick="sendOTP()" style="padding:10px 20px;">Send OTP</button>
@@ -15,22 +15,19 @@
 
   <script>
     function sendOTP() {
-      const raw = document.getElementById('phone').value.trim();
+      const input = document.getElementById('phone').value.trim();
+      const phone = input.replace(/^0/, '92'); // 0300 → 92300
       
-      // ✅ Convert to international format
-      const cleaned = raw.replace(/^0/, "92"); // 0300 → 92300
-
-      const jsonBody = {
-        msisdn: cleaned,
-        channel: "WC"
+      const data = {
+        phone: phone
       };
 
-      fetch("https://jazztv.pk/alpha/api_gateway/index.php/v3/users-dbss/sign-up-wc", {
+      fetch("https://backend.sastaticket.pk/api/v3/users/generate_otp/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(jsonBody)
+        body: JSON.stringify(data)
       })
       .then(res => res.json())
       .then(data => {

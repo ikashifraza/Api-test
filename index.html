@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JazzTV OTP Sender</title>
+</head>
+<body style="font-family:sans-serif; background:#f2f2f2; padding:30px;">
+
+  <h2>📲 JazzTV OTP API Test</h2>
+  <label>Enter Phone Number:</label><br>
+  <input type="text" id="phone" placeholder="03001234567" style="padding:8px; width:250px;"><br><br>
+  
+  <button onclick="sendOTP()" style="padding:10px 20px;">Send OTP</button>
+
+  <pre id="result" style="margin-top:20px; background:white; padding:10px; border:1px solid #ccc;"></pre>
+
+  <script>
+    function sendOTP() {
+      const number = document.getElementById('phone').value;
+      const jsonBody = {
+        msisdn: number,
+        channel: "WC"
+      };
+
+      fetch("https://jazztv.pk/alpha/api_gateway/index.php/v3/users-dbss/sign-up-wc", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(jsonBody)
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+      })
+      .catch(err => {
+        document.getElementById("result").textContent = "Error: " + err;
+      });
+    }
+  </script>
+
+</body>
+</html>

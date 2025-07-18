@@ -1,43 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>SastaTicket OTP Sender</title>
+  <title>API Test Tool</title>
 </head>
-<body style="font-family:sans-serif; background:#eef; padding:30px;">
-
-  <h2>📨 SastaTicket OTP Test</h2>
-  <label>Enter Phone Number (e.g. 03001234567):</label><br>
-  <input type="text" id="phone" placeholder="03001234567" style="padding:8px; width:250px;"><br><br>
+<body style="font-family: sans-serif; padding: 20px;">
+  <h2>📡 API Test Tool</h2>
   
-  <button onclick="sendOTP()" style="padding:10px 20px;">Send OTP</button>
+  <label>📱 Phone Number:</label><br>
+  <input type="text" id="phone" value="03001677853" placeholder="Enter phone"><br><br>
 
-  <pre id="result" style="margin-top:20px; background:white; padding:10px; border:1px solid #ccc;"></pre>
+  <button onclick="sendJazz()">Send to JazzTV API</button>
+  <button onclick="sendSasta()">Send to Sastaticket API</button>
+  
+  <h3>Response:</h3>
+  <pre id="response" style="background:#f1f1f1; padding: 10px;"></pre>
 
   <script>
-    function sendOTP() {
-      const input = document.getElementById('phone').value.trim();
-      const phone = input.replace(/^0/, '92'); // 0300 → 92300
-      
-      const data = {
-        phone: phone
-      };
-
-      fetch("https://backend.sastaticket.pk/api/v3/users/generate_otp/", {
+    function sendJazz() {
+      const phone = document.getElementById('phone').value;
+      fetch("https://jazztv.pk/alpha/api_gateway/index.php/v3/users-dbss/sign-up-wc", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ msisdn: phone })
       })
       .then(res => res.json())
-      .then(data => {
-        document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+      .then(data => document.getElementById("response").innerText = JSON.stringify(data, null, 2))
+      .catch(err => document.getElementById("response").innerText = "Error: " + err);
+    }
+
+    function sendSasta() {
+      const phone = document.getElementById('phone').value;
+      fetch("https://backend.sastaticket.pk/api/v3/users/generate_otp/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: phone })
       })
-      .catch(err => {
-        document.getElementById("result").textContent = "Error: " + err;
-      });
+      .then(res => res.json())
+      .then(data => document.getElementById("response").innerText = JSON.stringify(data, null, 2))
+      .catch(err => document.getElementById("response").innerText = "Error: " + err);
     }
   </script>
-
 </body>
 </html>

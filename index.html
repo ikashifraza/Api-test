@@ -6,7 +6,7 @@
 <body style="font-family:sans-serif; background:#f2f2f2; padding:30px;">
 
   <h2>📲 JazzTV OTP API Test</h2>
-  <label>Enter Phone Number:</label><br>
+  <label>Enter Phone Number (e.g. 03003310470):</label><br>
   <input type="text" id="phone" placeholder="03001234567" style="padding:8px; width:250px;"><br><br>
   
   <button onclick="sendOTP()" style="padding:10px 20px;">Send OTP</button>
@@ -15,9 +15,13 @@
 
   <script>
     function sendOTP() {
-      const number = document.getElementById('phone').value;
+      const raw = document.getElementById('phone').value.trim();
+      
+      // ✅ Convert to international format
+      const cleaned = raw.replace(/^0/, "92"); // 0300 → 92300
+
       const jsonBody = {
-        msisdn: number,
+        msisdn: cleaned,
         channel: "WC"
       };
 
